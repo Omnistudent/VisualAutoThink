@@ -13,7 +13,7 @@
   <head>
     <title>Main Screen</title>
     <style>
-body{ margin: 0}
+
 
 .button-container {
 
@@ -58,9 +58,9 @@ body{ margin: 0}
   font-size: 2; /* Set font-size to 0 to remove white space between elements */
   display: grid;
   grid-template-columns:700px 1fr 50 px;
-  grid-template-rows: 50px {{myrange_y|length|multiply:10|add:80 }}px 50px;
-  gap: 10px;
-  padding: 10px;
+  grid-template-rows: 50px 1fr 1fr 50px;
+  gap: 5px;
+  padding: 5px;
   box-sizing: border-box;
   position: relative;
   outline: none;
@@ -75,25 +75,7 @@ body{ margin: 0}
   z-index: 1;
 }
 
-.answercontainer {
-  font-size: 0.8em;
-  width: 400px;
-  height: 200px;
-  font-family: "IM Fell DW Pica","EB Garamond", serif;
-  font-weight: bold;
-  gap: 5px;
-  padding: 5px;
-  box-sizing: border-box;
-  position: relative;
-  border: 1px solid #000000;
-  overflow: auto;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgb(240, 229, 198);
-
-}
 
 .header {
   
@@ -104,28 +86,15 @@ body{ margin: 0}
   background-color: rgb(240, 229, 198);
 }
 
-.gridcontainer{
-  font-size: 0;
-  width: 400px; 
-  height: 400px;
-  position: relative;
-  border: 0px solid #000000;
-  padding: 0px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgb(240, 229, 198);
-  align-items: center;
-  
-}
+
 
 .content-large {
   grid-row-start: 2;
   grid-row-end: span 1;
   grid-column-start: 1;
-  height: 410px;
+  height: 800px;
   
-  width: 900px;
+  width: 1200px;
 
   outline: 1px;
   border: 1px solid #000000;
@@ -135,23 +104,14 @@ body{ margin: 0}
   overflow: auto;
 }
 
-.content-small {
-  max-width: 100px;
-  /*height: 600px;*/
-  font-family: "IM Fell DW Pica","EB Garamond", serif;
-  border: 1px solid #000000;
-  padding: 10px;
-  margin: 0px;
-  z-index: 1;
-  background-color: rgb(240, 229, 198);
-}
+
 
 .content-question_answer {
-  /*width: 300px;*/
-  height: {{myrange_y|length|multiply:30|add:80 }}px;
+  width: 100px;
+  height: 100px;
   font-family: "IM Fell DW Pica","EB Garamond", serif;
   border: 1px solid #000000;
-  padding: 10px;
+  padding: 5px;
   margin: 0px;
   z-index: 1;
   background-color: rgb(237, 215, 156);
@@ -161,6 +121,7 @@ body{ margin: 0}
   grid-column-start: 1;
   grid-column-end: span 3;
   grid-row-start: 3;
+
   border: 1px solid #000000;
   background-color: rgb(240, 229, 198);
 
@@ -197,36 +158,75 @@ body{ margin: 0}
   </head>
   <body>
     <div class="container">
-     <div class="header">Kapten: {{user.userprofile}}</div>
+     <div class="header">
+          <a class="nav-link" href="{% url 'home' %}">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;
+          <a class="nav-link" href="{% url 'login' %}">Log in</a>&nbsp;&nbsp;&nbsp;&nbsp;
+          <a class="nav-link" href="{% url 'managegenomes' %}">Manage genomes</a>&nbsp;&nbsp;&nbsp;&nbsp; 
+            <a class="nav-link" href="{% url 'register_user' %}">Register</a>&nbsp;&nbsp;&nbsp;&nbsp; 
+            <a class="nav-link" href="{% url 'logout' %}">Log out</a>&nbsp;&nbsp;&nbsp;&nbsp; 
+            <a class="nav-link" href="{% url 'editSettings' %}"> Edit Settings</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a class="nav-link" href="{% url 'help' %}">Help</a>&nbsp;&nbsp;&nbsp;&nbsp;
+          User: {{user.userprofile}}
+
+        
+
+
+     </div>
      
      <div class="content-large">
 
 
       <table id="example" class="table table-striped" style="width:100%">
+        
 
         
         <thead>
             <tr>
+              <th>x</th>
                 <th>Name</th>
                 <th>Is Dir</th>
                 <th>Genome Directory</th>
                 <th>Contigs</th>
                 <th>Genome Size</th>
+                <th>IS footprint</th>
                 <th>Analyze</th>
                 <th>Prepare</th>
+                <th>Blast</th>
+                <th> Analyse Blast</th>
+                <th> Make footprints</th>
+                <th> Analyse results</th>
+                <th> Completeness freq</th>
             </tr>
         </thead>
         <tbody>
         
           {% for item in squaredb %}
           <tr>
+            <td><input type="checkbox" name="{{ item }}" {% if item.is_checked %}checked{% endif %}></td>
             <td> {{item.name}}</td>
             <td> {{item.is_dir}}</td>
             <td> {{item.path}}</td>
-            <td> {{item.contigs_num}}</td>
+            <td> {{item.contigs_num}}</td>            
             <td> {{item.genome_size}}</td>
-            <td><button class="myButton" onclick="receiveAnswer2('{{ item.name }}')">Analyse</button></td>
-            <td><button class="myButton" onclick="prepare('{{ item.name }}')">Prepare</button></td>
+            <td> {{item.footprint_size}}</td>
+            <td><button class="myButton" style="border: 2px solid {{ item.button_analyse_isok }}" onclick="receiveAnswer2('{{ item.name }}')">Analyse</button></td>
+            
+            <td><button class="myButton" style="border: 2px solid {{ item.button_prepare_isok }}" onclick="prepare('{{ item.name }}')">Prepare</button></td>
+            <td><button class="myButton" style="border: 2px solid {{ item.button_blast_isok }}" onclick="blast('{{ item.name }}')">Blast</button></td>
+            <td><button class="myButton" style="border: 2px solid {{ item.button_blastanal_isok }}" onclick="analyse_blast('{{ item.name }}')">Analyse Blast</button></td>
+            <td><button class="myButton" style="border: 2px solid {{ item.button_footprints_isok }}" onclick="make_foot('{{ item.name }}')">Make Foot</button></td>
+            <td><button class="myButton" style="border: 2px solid {{ item.button_analyse_results_isok }}" onclick="analyse_results('{{ item.name }}')">Analyse results</button></td>
+            <td>
+              {% if item.is_frequency_pic %}
+                  <img src="{{ STATIC_URL }}event/images/{{ item.is_frequency_pic}}" alt="Image 2">
+
+                  
+              {% else %}
+                  <img src="{{ STATIC_URL }}event/images/blank.png" alt="Default Image">
+              {% endif %}
+
+          </td>
+
 
           </tr>
 
@@ -242,88 +242,15 @@ body{ margin: 0}
     
 
     <!--Questions window-->
-     <div class="content-question_answer">
-      <center>
-
-      <div class="answercontainer">
- 
-
-    <table id="itemsTable">
-      
-      <thead>
-          <tr>
-              <th></th>
-              <th>Name</th>
-              <!-- Add other table headers here -->
-          </tr>
-      </thead>
-      <tbody>
-          {% for item in currentdir_listing %}
-              <tr>
-                  <td><input type="checkbox" name="{{ item }}" {% if item.is_checked %}checked{% endif %}></td>
-                  <td>{{ item }}</td>
-                  <!-- Add other table cells here -->
-              </tr>
-          {% endfor %}
-      </tbody>
-  </table>
 
 
 
 
-
-      </div>
-      <br>
-      <div>
-
-        <ul id="selectedFiles"></ul>
-        <input type="hidden" id="selectedFilesInput" name="selected_files" value="">
-    
-        <button onclick="thing3()">Add Selected Files2</button>
-        <br>
-    <input type="text" id="path-input" name="path" placeholder="Enter path...">
-    <form method="post" id="question-form" action="">
-      {% csrf_token %}
-      <button onclick="thing2()">commit_directory</button>
-    </form>
-
-
-
-    <div class="button-container">
-        <form method="post" id="question-form" action="">
-        
-          {% csrf_token %}
- 
-          <br>
-  
-              <button class="btn btn-primary answer-button" onclick="receiveAnswer('answer','{{ answer }}','1')" name="answer" value="{{ answer }}">sak</button>
-       
-      
-      </form>
-    </div>
-  </center>
-     </div>
-
-     <!--Stats window-->
-     <div class="content-small">
-        genome directory:<br>
-        {{user.userprofile.current_genome_dir}}<br>
-        
-        position x: {{user.userprofile.xpos}}<br>
-        position y: {{user.userprofile.ypos}}<br>
-        pending position x: {{user.userprofile.pending_xpos}}<br>
-        position y: {{user.userprofile.pending_ypos}}<br>
-
-      <br>
-      view<br>
-      x{{user.userprofile.x}} y{{user.userprofile.y}}<br>
-     </div>
-
-    </div>
-  <!-- <div class="footer">        rätta svar:{{user.userprofile.correct_answers}}    
-      felaktiga svar:{{user.userprofile.wrong_answers}}</div>--> 
+   
+   <div class="footer">        
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
       <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    </div>
 <script>
 
 
@@ -332,9 +259,9 @@ body{ margin: 0}
 
     // Initialize DataTables
     $(document).ready(function() {
-        $('#example').DataTable();
+        $('#example').DataTable({searching: false, paging: false, info: false});
     });
-
+    
 var buttons = document.querySelectorAll('.answer-button');
 
 
@@ -446,25 +373,81 @@ function receiveAnswer2(genomename) {
   form.submit();
 }
 
-function prepare(genomename) {
 
 
-
+function analyse_results(genomename) {
 var command_input = document.createElement('input');
 command_input.type = 'hidden';
 command_input.name = 'command';
-command_input.value = 'prepare';
-
+command_input.value = 'analyse_results';
 var answer_input = document.createElement('input');
 answer_input.type = 'hidden';
 answer_input.name = 'answer';
 answer_input.value = genomename;
-//alert("Selected value: " + dropdownValue);
-//console.log('Dropdown value:', document.getElementById('dropdown').value);
-
 var form = document.getElementById('question-form');
 form.appendChild(command_input);
+form.appendChild(answer_input);
+form.submit();
+}
 
+function prepare(genomename) {
+var command_input = document.createElement('input');
+command_input.type = 'hidden';
+command_input.name = 'command';
+command_input.value = 'prepare';
+var answer_input = document.createElement('input');
+answer_input.type = 'hidden';
+answer_input.name = 'answer';
+answer_input.value = genomename;
+var form = document.getElementById('question-form');
+form.appendChild(command_input);
+form.appendChild(answer_input);
+form.submit();
+}
+
+
+function blast(genomename) {
+var command_input = document.createElement('input');
+command_input.type = 'hidden';
+command_input.name = 'command';
+command_input.value = 'blast';
+var answer_input = document.createElement('input');
+answer_input.type = 'hidden';
+answer_input.name = 'answer';
+answer_input.value = genomename;
+var form = document.getElementById('question-form');
+form.appendChild(command_input);
+form.appendChild(answer_input);
+form.submit();
+}
+
+
+function analyse_blast(genomename) {
+var command_input = document.createElement('input');
+command_input.type = 'hidden';
+command_input.name = 'command';
+command_input.value = 'analyseblast';
+var answer_input = document.createElement('input');
+answer_input.type = 'hidden';
+answer_input.name = 'answer';
+answer_input.value = genomename;
+var form = document.getElementById('question-form');
+form.appendChild(command_input);
+form.appendChild(answer_input);
+form.submit();
+}
+
+function make_foot(genomename) {
+var command_input = document.createElement('input');
+command_input.type = 'hidden';
+command_input.name = 'command';
+command_input.value = 'make_footprint';
+var answer_input = document.createElement('input');
+answer_input.type = 'hidden';
+answer_input.name = 'answer';
+answer_input.value = genomename;
+var form = document.getElementById('question-form');
+form.appendChild(command_input);
 form.appendChild(answer_input);
 form.submit();
 }

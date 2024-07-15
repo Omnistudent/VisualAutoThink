@@ -1,3 +1,4 @@
+from msilib import sequence
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -96,6 +97,18 @@ class UserProfile(models.Model):
 	temp_question_area_holder=models.CharField('temp_question_area_holder',max_length=120,default='x')
 	temp_question_area_strength_holder=models.CharField('temp_question_area_strength_holder',max_length=120,default='0')
 	current_genome_dir=models.CharField('user_current_genome_dir',max_length=120,default='')
+	blast_directory=models.CharField('blast_directory',max_length=120,default='')
+	#blast_directory=models.CharField('blast_directory',max_length=120,default='c:/NCBI/blast-BLAST_VERSION+/bin/')
+	first_e_cutoff=models.CharField('first_e_cutoff',max_length=120,default='1e-6')
+	second_e_cutoff=models.CharField('second_e_cutoff',max_length=120,default='1e-6')
+	transposase_protein_database=models.CharField('transposase_protein_database',max_length=120,default='C:/Users/Eris/Documents/scripts/autothink/is_aa_30_nov2016.fa')
+	blast_files_dir=models.CharField('blast_files_dir',max_length=120,default="D:/blastresults/")
+	blast_analysis_dir=models.CharField('blast_analysis_dir',max_length=120,default="D:/blastanalysis/")
+	analysed_gb_files_dir=models.CharField('analysed_gb_files',max_length=120,default="D:/analysed_gb_files/")
+	work_files_dir=models.CharField('work_files_dir',max_length=120,default="D:/workfiles/")
+	is_list_csv_file_dir=models.CharField('is_list_csv_file_dir',max_length=120,default="D:/is_csvs/")
+	is_frequency_pic_dir=models.CharField('is_frequency_pic_dir',max_length=120,default="c:/Users/Eris/Documents/visualAutothink/visapp_proj/static/event/images/")
+	
 
 	def __str__(self):
 		return str(self.user)
@@ -183,17 +196,13 @@ class Event(models.Model):
 
     def __str__(self):
 	    return self.name
-class MyFile(models.Model):
-	first_name=models.CharField('First Name',max_length=120)
-	last_name=models.CharField('Last Name',max_length=120)
-	y=models.CharField('Y',max_length=120)
-	z=models.CharField('Z',max_length=120)
-	description=models.TextField(blank=True)
-	environment=models.ForeignKey(Environment, blank=True,null=True,on_delete=models.CASCADE)
-	email=models.EmailField('User Email')
+class Footprint(models.Model):
+	start=models.IntegerField('start',default=-1)
+	end=models.IntegerField('end',default=-1)
+	sequence=models.CharField('sequence',max_length=5000,default="-1")
 
 	def __str__(self):
-		return self.first_name+' '+self.last_name
+		return "foorprint"
 		
 class genomeEntry(models.Model):
     name=models.CharField('name',max_length=120)
@@ -203,11 +212,25 @@ class genomeEntry(models.Model):
     description=models.TextField(blank=True)
     contigs_num=models.IntegerField('contigs_num',default=-1)
     genome_size=models.IntegerField('genome_size',default=-1)
+    footprint_size=models.IntegerField('footprint_size',default=-1)
+    button_analyse_isok=models.TextField('button_analyse_isok',default="red")
+    button_prepare_isok=models.TextField('button_prepare_isok',default="red")
+    button_blast_isok=models.TextField('button_blast_isok',default="red")
+    button_blastanal_isok=models.TextField('button_blastanal_isok',default="red")
+    button_footprints_isok=models.TextField('button_footprints_isok',default="red")
+    button_analyse_results_isok=models.TextField('button_analyse_results_isok',default="red")
+
+
     files_num=models.IntegerField('files_num',default=-1)
-    dir_files=models.ManyToManyField(MyFile,blank=True)
-    blast_files_dir=models.CharField('blast_files_dir',max_length=120,default="D:/blastresults/")
+    footprints=models.ManyToManyField(Footprint,blank=True)
+
     work_files_dir=models.CharField('work_files_dir',max_length=120,default="D:/workfiles/")
-    concat_fasta_file=models.CharField('work_files_dir',max_length=120,default="")
+    concat_fasta_file=models.CharField('concat_fasta_file',max_length=120,default="")
+    blast_results_file=models.CharField('blast_results_file',max_length=120,default="")
+    blast_analysis_file=models.CharField('blast_analysis_file',max_length=120,default="")
+    analysed_gb_files=models.CharField('analysed_gb_files',max_length=120,default="")
+    is_list_csv_file=models.CharField('is_list_csv_file',max_length=120,default="")
+    is_frequency_pic=models.CharField('is_frequency_pic',max_length=120,default="")
 
     def __str__(self):
 	    return self.name

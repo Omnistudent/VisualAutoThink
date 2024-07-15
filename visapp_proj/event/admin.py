@@ -10,7 +10,8 @@ from .models import UserProfile2
 from .models import Question
 from .models import Beacon
 from .models import genomeEntry
-from .models import MyFile
+from .models import Footprint
+
 admin.site.register(Environment)
 admin.site.register(Square)
 admin.site.register(MyPlayer)
@@ -22,4 +23,5 @@ admin.site.register(UserProfile2)
 admin.site.register(Question)
 admin.site.register(Beacon)
 admin.site.register(genomeEntry)
-admin.site.register(MyFile)
+admin.site.register(Footprint)
+
