@@ -26,6 +26,7 @@ from django.utils import timezone
 from datetime import timedelta
 from django.db.models import Q
 from django.conf import settings
+from django.db import models
 import os
 from .models import ListItem
 from Bio import SeqIO
@@ -183,8 +184,41 @@ def home(request):
         # Create a new user with the generated username and password
         user = User.objects.create_user(username=username10, password=password)
         question = Question.objects.filter(name='Correct_1').order_by('?').first()
-        user_profile = UserProfile.objects.create(user=user,name=user,x='0',y='0',xpos=5,ypos=5,pending_xpos=0,pending_ypos=0,correct_answers=0,wrong_answers=0,question=question,user_type='temp',mode='move')
+
+        #"c:\Users\Eris\Documents\visualAutothink\visapp_proj\static\blastbin"
+        #c:\Users\Eris\Documents\visualAutothink\visapp_proj\static\results
+        BASE_DIR2 = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        #blastbin=dbp=BASE_DIR2+blastplacestatic
+        dbp1=os.path.join(settings.STATIC_URL, 'isdatabase/is_aa_30_nov2016.fa')
+        blastplacestatic=os.path.join(settings.STATIC_URL, 'blastbin')
+        resultsplacestatic=os.path.join(settings.STATIC_URL, 'results')
+        blast1_resultsplacestatic=os.path.join(settings.STATIC_URL, 'blast1results')
+        #dbp=os.path.join(BASE_DIR2, dbp1)
+        print("here111")
+        dbp=BASE_DIR2+dbp1
+        blastplace=BASE_DIR2+blastplacestatic+"/"
+        resultplace=BASE_DIR2+resultsplacestatic
+        blast1_resultplace=BASE_DIR2+blast1_resultsplacestatic
+        print(dbp)
+        user_profile = UserProfile.objects.create(user=user,name=user,x='0',y='0',xpos=5,ypos=5,pending_xpos=0,
+                                                  pending_ypos=0,correct_answers=0,wrong_answers=0,question=question,user_type='temp',mode='move',
+                                                  transposase_protein_database=dbp,
+                                                  work_files_dir=resultplace,
+                                                  blast_files_dir=blast1_resultplace,
+                                                  blast_directory=blastplace)
         user.userprofile=user_profile
+        print("-----------------")
+        print(dbp)
+        print(dbp1)
+        print(BASE_DIR2 )
+        print(blastplace)
+        print("-----------------")
+        
+
+        #user.userprofile.transposase_protein_database='C:/Users/Eris/Documents/scripts/autothink/is_aa_30_nov2016.fa'
+        #user.userprofile.save()
+   
+
 
         # Authenticate and log in the user
         user = authenticate(request, username=username10, password=password)
@@ -845,6 +879,9 @@ def getseq(start,end,seq):
     return seq[start-1:end]
 
 def doblast(isseq,genObj,genomename,user):
+    #BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    #print("dddddddddddddddd")
+    #print(BASE_DIR)
     file_start=genomename.split(".")[0]
     file_start=remove_extension(genomename)
     my_blast_files_dir=user.userprofile.blast_files_dir+"/"+file_start

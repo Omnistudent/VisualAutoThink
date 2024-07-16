@@ -2,7 +2,8 @@ from msilib import sequence
 from django.db import models
 from django.contrib.auth.models import User
 
-
+import os
+from django.conf import settings
 
 
 
@@ -102,12 +103,15 @@ class UserProfile(models.Model):
 	first_e_cutoff=models.CharField('first_e_cutoff',max_length=120,default='1e-6')
 	second_e_cutoff=models.CharField('second_e_cutoff',max_length=120,default='1e-6')
 	transposase_protein_database=models.CharField('transposase_protein_database',max_length=120,default='C:/Users/Eris/Documents/scripts/autothink/is_aa_30_nov2016.fa')
+
 	blast_files_dir=models.CharField('blast_files_dir',max_length=120,default="D:/blastresults/")
 	blast_analysis_dir=models.CharField('blast_analysis_dir',max_length=120,default="D:/blastanalysis/")
 	analysed_gb_files_dir=models.CharField('analysed_gb_files',max_length=120,default="D:/analysed_gb_files/")
 	work_files_dir=models.CharField('work_files_dir',max_length=120,default="D:/workfiles/")
 	is_list_csv_file_dir=models.CharField('is_list_csv_file_dir',max_length=120,default="D:/is_csvs/")
 	is_frequency_pic_dir=models.CharField('is_frequency_pic_dir',max_length=120,default="c:/Users/Eris/Documents/visualAutothink/visapp_proj/static/event/images/")
+
+
 	
 
 	def __str__(self):
