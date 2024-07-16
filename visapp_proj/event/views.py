@@ -120,7 +120,7 @@ def managegenomes(request):
                     else:
                         dirinput="0"
 
-                    my_work_files_dir=work_files_base_dir+"/"+cleanedname
+                    my_work_files_dir=request.user.userprofile.work_files_dir+"/"+cleanedname
                     if not os.path.exists(my_work_files_dir):
                         os.makedirs(my_work_files_dir)
                         #print("making dir "+my_work_files_dir)
@@ -130,7 +130,7 @@ def managegenomes(request):
                         os.makedirs(my_blast_files_dir)
                         #print("making dir "+my_blast_files_dir)
 
-
+                    genomeP = genomeEntry.objects.create(name=i, path=request.user.userprofile.current_genome_dir, extra='sea3', is_dir=dirinput,blast_results_file=my_blast_files_dir,work_files_dir=my_work_files_dir)
                     
     
             return render(request,'event/managegenomes.html',{'squaredb':dbsquares,'currentdir_listing':currendir_listing})
@@ -557,7 +557,6 @@ def home(request):
         # Send ranges,database,question and randomly ordered answers
         overlays=getLabels(user,dbsquares,30)
 
-        directory_path = 'C:/Users/Eris/Documents'  # Replace with the path to your directory
         print("here------------------------")
         file_list = ["test1","testt2"]#os.listdir(directory_path)
     
