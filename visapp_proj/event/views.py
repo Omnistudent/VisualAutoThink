@@ -42,9 +42,9 @@ import matplotlib.pyplot as plt
 from PIL import Image
 #from django.http import HttpResponse
 
-blast_files_base_dir="D:/blastresults"
-work_files_base_dir="D:/workfiles"
-default_genome_dir="C:/Users/Eris/Documents/autothinktestfolder/frankiatestgenomes"
+
+
+default_genome_dir=""
 
 onerange=['5', '15', '25', '35', '45', '55', '65', '75', '85', '95', '105', '115']
 range_list_names_global=['-5_5', '5_15', '15_25', '25_35', '35_45', '45_55', '55_65', '65_75', '75_85', '85_95', '95_105', '105_115']
@@ -81,7 +81,7 @@ def managegenomes(request):
     try:
         currendir_listing = os.listdir(request.user.userprofile.current_genome_dir)
     except:
-        currendir_listing = os.listdir(default_genome_dir)
+        currendir_listing = []
 
 
     if request.method == 'POST':
@@ -131,8 +131,7 @@ def managegenomes(request):
                         #print("making dir "+my_blast_files_dir)
 
 
-                    genomeP = genomeEntry.objects.create(name=i, path=request.user.userprofile.current_genome_dir, extra='sea3', is_dir=dirinput,blast_results_file=blast_files_base_dir,work_files_dir=my_work_files_dir)
-
+                    
     
             return render(request,'event/managegenomes.html',{'squaredb':dbsquares,'currentdir_listing':currendir_listing})
 
@@ -385,7 +384,7 @@ def home(request):
 
 
 
-                    genomeP = genomeEntry.objects.create(name=i, path=user.userprofile.current_genome_dir, extra='sea3', is_dir=dirinput,blast_files_dir=blast_files_base_dir,work_files_dir=my_work_files_dir)
+                   
 
 
 
@@ -776,7 +775,9 @@ def prepareGenomeForBlast(genomeFullPath,genObj,genomename):
     genomeFullPath_fh=open(genomeFullPath,"r")
     full_file_start=genomename.split(".")[0]
     concatFastaFilename=file_start+"_conc.fa"
-    my_work_files_dir=work_files_base_dir+"/"+file_start
+    my_work_files_dir=user.userprofile.work_files_dir+"/"+file_start
+
+    user.userprofile.work_files_dir
     print(my_work_files_dir)
     if not os.path.exists(my_work_files_dir):
         os.makedirs(my_work_files_dir)
@@ -1314,7 +1315,7 @@ def editmap(request):
                     else:
                         dirinput="0"
 
-                    my_work_files_dir=work_files_base_dir+"/"+cleanedname
+                    my_work_files_dir=user.userprofile.work_files_dir+"/"+cleanedname
                     if not os.path.exists(my_work_files_dir):
                         os.makedirs(my_work_files_dir)
                         #print("making dir "+my_work_files_dir)
